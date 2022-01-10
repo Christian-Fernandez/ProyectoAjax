@@ -16,6 +16,7 @@ function comprobar_usuario($nombre,$clave){
             return TRUE;
             
         }else{
+            //echo "<p><h2>Usuario no registrado</h2></p>"
             return FALSE;
         }
         
