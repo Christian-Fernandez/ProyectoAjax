@@ -1,0 +1,43 @@
+table {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 12px;
+    margin: 45px;
+    width: 70%;
+    border-collapse: collapse;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 50px;
+
+}
+
+th {
+    font-size: 13px;
+    font-weight: normal;
+    padding: 15px;
+    border-bottom: 1px solid #fff;
+    color: black;
+    border-collapse: collapse
+
+}
+
+td {
+    padding: 18px;
+    background: #e8edff;
+    border-bottom: 1px solid #fff;
+    color: black;
+    border-collapse: collapse
+
+}
+
+.primera{
+    background-color: #375fff;
+}
+
+.segunda{
+    background-color: #3054cc;
+}
+
+.thProductos{
+    background-color: #6c85f6;
+}
+

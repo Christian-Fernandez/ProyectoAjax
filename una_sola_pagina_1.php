@@ -5,6 +5,7 @@
         <meta charset = "UTF-8">
         <script type = "text/javascript" src = "js/sesion.js"></script>
         <script type = "text/javascript" src = "js/cargarDatos.js"></script>
+        <link rel="stylesheet" href="css/index.css">
     </head>	
     <body>		
         <section id = "login">

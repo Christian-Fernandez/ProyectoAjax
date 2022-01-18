@@ -1,8 +1,8 @@
 <?php
 
 define("CADENA_CONEXION", 'mysql:dbname=pedidos;host=127.0.0.1');
-define("USUARIO_CONEXION", 'ciclost');
-define("CLAVE_CONEXION", 'toor');
+define("USUARIO_CONEXION", 'root');
+define("CLAVE_CONEXION", '');
 
 function comprobar_usuario($nombre, $clave){
     try{
@@ -114,6 +114,23 @@ function insertar_pedido($carrito, $codRes){
     } catch (Exception $ex) {
         echo "Error con la base de datos: " . $ex->getMessage();
 
+    }
+}
+
+function cargarPedidos($res){
+    try{
+        $bd = new PDO(CADENA_CONEXION, USUARIO_CONEXION, CLAVE_CONEXION);
+        $ins = "select pd.CodPed,pd.Fecha,pd.Enviado,p.Nombre,p.Descripcion,ped.Unidades
+                from pedidos as pd JOIN pedidosproductos as ped on pd.CodPed = ped.CodPed
+                JOIN productos as p on p.CodProd = ped.CodProd
+                where pd.Restaurante = $res";
+        $resul = $bd->query($ins);
+        if(!$resul){
+            return FALSE;
+        }
+        return $resul->fetchAll();
+    } catch (PDOException $ex) {
+        echo "Error con la base de datos: " . $ex->getMessage();
     }
 }
 

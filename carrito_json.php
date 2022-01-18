@@ -7,7 +7,7 @@
     // hay que añadir las unidades
     $productos = iterator_to_array($productos);
     foreach($productos as &$producto){
-        $cod = $producto['codProd'];
+        $cod = $producto['CodProd'];
         $producto['unidades'] = $_SESSION['carrito'][$cod];	
     }
     echo json_encode($productos, true);
