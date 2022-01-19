@@ -1,8 +1,8 @@
 <?php
 
 define("CADENA_CONEXION", 'mysql:dbname=pedidos;host=127.0.0.1');
-define("USUARIO_CONEXION", 'root');
-define("CLAVE_CONEXION", '');
+define("USUARIO_CONEXION", 'ciclost');
+define("CLAVE_CONEXION", 'toor');
 
 function comprobar_usuario($nombre, $clave){
     try{
@@ -123,7 +123,7 @@ function cargarPedidos($res){
         $ins = "select pd.CodPed,pd.Fecha,pd.Enviado,p.Nombre,p.Descripcion,ped.Unidades
                 from pedidos as pd JOIN pedidosproductos as ped on pd.CodPed = ped.CodPed
                 JOIN productos as p on p.CodProd = ped.CodProd
-                where pd.Restaurante = $res";
+                where pd.Restaurante ORDER BY pd.Fecha DESC; = $res";
         $resul = $bd->query($ins);
         if(!$resul){
             return FALSE;

@@ -214,16 +214,21 @@ function cargarPedidos(){
            let tabla = "<table><tr class='primera'><th>Núm.Pedido</th><th>Fecha</th><th>Enviado</th></tr>";
            let enviado;
            let cod="null";
+           let num = 0;
            for(let i=0;i<data.pedidos.length;i++){
                data.pedidos[i].Enviado == 0  ? enviado="No" : enviado="Si";
 
-                if(data.pedidos[i].CodPed==cod){
-                    tabla+= `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td></tr>`;
-                }else{
-                    tabla+= `<tr class="segunda"><th>${data.pedidos[i].CodPed}</th><th>${data.pedidos[i].Fecha}</th><th>${enviado}</th></tr><tr class="thProductos"><th>Producto</th><th>Descripción</th><th>Cantidad</th></tr>` +
-                        `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td></tr>`;
-                }
-                cod=data.pedidos[i].CodPed;
+               if(num<5) {
+
+                   if (data.pedidos[i].CodPed == cod) {
+                       tabla += `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td></tr>`;
+                   } else {
+                       num++;
+                       tabla += `<tr class="segunda"><th>${data.pedidos[i].CodPed}</th><th>${data.pedidos[i].Fecha}</th><th>${enviado}</th></tr><tr class="thProductos"><th>Producto</th><th>Descripción</th><th>Cantidad</th></tr>` +
+                           `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td></tr>`;
+                   }
+                   cod = data.pedidos[i].CodPed;
+               }
             }
            tabla += "</table>";
             contenido.innerHTML = tabla;
