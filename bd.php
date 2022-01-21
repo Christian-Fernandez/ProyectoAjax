@@ -63,7 +63,7 @@ function cargar_categoria($codCat){
 function cargar_productos_categoria($codCat){
     try{
         $bd = new PDO(CADENA_CONEXION, USUARIO_CONEXION, CLAVE_CONEXION);
-        $ins = "SELECT * FROM productos WHERE CodCat=$codCat";
+        $ins = "SELECT * FROM productos WHERE CodCat=$codCat and Stock>0";
         $resul = $bd->query($ins);
         if(!$resul){
             return FALSE;

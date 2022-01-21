@@ -132,14 +132,26 @@ function cargarCarrito(){
                     var procesar = document.createElement("a");
                     procesar.href ="#";
                     procesar.innerHTML= "Realizar pedido";
-                    procesar.onclick = function(){return procesarPedido();};
+                    procesar.onclick = function() {
+                        if (window.confirm("¿Deseas confirmar el pedido?")) {
+                            procesarPedido();
+                        }
+                    }
                     contenido.appendChild(procesar);
                 }catch(e){
                     var mensaje = document.createElement("p");
-                    mensaje.innerHTML = "Todavía no tiene productos";
+                    mensaje.innerHTML = "Todavía no tienes productos";
                     contenido.appendChild(mensaje);
                 }			
 
+        }else{
+            var contenido = document.getElementById("contenido");
+            contenido.innerHTML = "";
+            var titulo = document.getElementById("titulo");
+            titulo.innerHTML = "Carrito de la compra";
+            var mensaje = document.createElement("p");
+            mensaje.innerHTML = "Todavía no tienes productos";
+            contenido.appendChild(mensaje);
         }
     };
     xhttp.open("GET", "carrito_json.php", true);
