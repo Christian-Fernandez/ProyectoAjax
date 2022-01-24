@@ -7,14 +7,15 @@ function login(){
             if(this.responseText==="FALSE"){
                 document.getElementById("clave").value="";
                 alert("Revise usuario y contraseña");                                            
-            }else{
+            }else if(this.responseText==="TRUE"){
+                cargarCabecera();
                 document.getElementById("principal").style.display= "block";
                 document.getElementById("login").style.display= "none";
-                /*ponemos el usuario devuelto en el hueco correspondiente*/				
-                document.getElementById("cab_usuario").innerHTML = "Usuario: " + usuario;
+                /*ponemos el usuario devuelto en el hueco correspondiente*/
                 /*cargamos las categorías de la base de datos*/
                 cargarCategorias(); 				
             }
+
         }
     }
     var usuario = document.getElementById("usuario").value;

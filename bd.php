@@ -1,8 +1,8 @@
 <?php
 
 define("CADENA_CONEXION", 'mysql:dbname=pedidos;host=127.0.0.1');
-define("USUARIO_CONEXION", 'ciclost');
-define("CLAVE_CONEXION", 'toor');
+define("USUARIO_CONEXION", 'root');
+define("CLAVE_CONEXION", '');
 
 function comprobar_usuario($nombre, $clave){
     try{
@@ -24,7 +24,7 @@ function comprobar_usuario($nombre, $clave){
 function cargar_categorias(){
     try{
         $bd = new PDO(CADENA_CONEXION, USUARIO_CONEXION, CLAVE_CONEXION);
-        $ins = "SELECT CodCat, Nombre FROM categoria";
+        $ins = "SELECT CodCat, Nombre,Descripcion FROM categoria";
         $resul = $bd->query($ins);
         if(!$resul){
             return FALSE;            
@@ -32,8 +32,7 @@ function cargar_categorias(){
         if($resul->rowCount() === 0){
             return FALSE;
         }
-        //echo "<h2>". $resul ."</h2>";
-        //echo "";
+
         return $resul;
     } catch (Exception $ex) {
         echo "Error con la base de datos: " . $ex->getMessage();
@@ -43,7 +42,7 @@ function cargar_categorias(){
 function cargar_categoria($codCat){
     try{
         $bd = new PDO(CADENA_CONEXION, USUARIO_CONEXION, CLAVE_CONEXION);
-        $ins = "SELECT Nombre, Descripcion FROM categoria WHERE CodCat=$codCat";
+        $ins = "SELECT Nombre, Descripcion,Codcat FROM categoria WHERE CodCat=$codCat";
         $resul = $bd->query($ins);
         
         if (!$resul) {
@@ -133,4 +132,302 @@ function cargarPedidos($res){
         echo "Error con la base de datos: " . $ex->getMessage();
     }
 }
+
+function restar_stock($codProd,$numProductos){
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $bd->beginTransaction();
+
+        $up = "UPDATE productos SET Stock= Stock-'$numProductos' WHERE codProd='$codProd'";
+
+        $resul = $bd->query($up);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        $bd->commit();
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function insertar_categoria($nombre,$descripcion){
+
+    try {
+        $bd = new PDO(CADENA_CONEXION, USUARIO_CONEXION, CLAVE_CONEXION);
+
+        $ins = "INSERT into categoria(Nombre, Descripcion) VALUES ('$nombre', '$descripcion')";
+        $resul = $bd->query($ins);
+
+        if (!$resul) {
+            return FALSE;
+        }
+
+        return $resul;
+
+    } catch (PDOException $e) {
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function eliminar_categoria($CodCat){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "DELETE FROM categoria WHERE CodCat='$CodCat'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+}
+
+function actualizar_categoria($CodCat,$nombre,$descripcion){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "UPDATE categoria SET Nombre='$nombre', Descripcion='$descripcion' WHERE CodCat='$CodCat'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+
+}
+
+function eliminar_usuario($CodRes){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "DELETE FROM restaurantes WHERE CodRes='$CodRes'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+}
+
+function cargar_usuario($CodRes){
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "SELECT CodRes,Correo,Clave,Pais,CP,Ciudad,Direccion  FROM restaurantes WHERE CodRes='$CodRes'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+        if($resul->rowCount() === 0){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function insertar_usuario($correo,$clave,$pais,$cp,$ciudad,$direccion){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $ins = "INSERT into restaurantes(Correo, Clave, Pais, CP, Ciudad, Direccion) VALUES ('$correo', '$clave', '$pais', '$cp', '$ciudad', '$direccion')";
+        $resul = $bd->query($ins);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+
+}
+
+function actualizar_usuario($CodRes,$correo,$clave,$pais,$cp,$ciudad,$direccion){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "UPDATE restaurantes SET Correo='$correo',Clave='$clave',Pais='$pais',CP='$cp',Ciudad='$ciudad',Direccion='$direccion' WHERE CodRes='$CodRes'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+
+}
+
+function  cargar_usuarios(){
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $ins = "SELECT * FROM restaurantes WHERE Correo!='admin'";
+        $resul = $bd->query($ins);
+
+        if(!$resul){
+            return FALSE;
+        }
+        if($resul->rowCount() === 0){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function  cargarProductos(){
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $ins = "SELECT CodProd,Nombre,Descripcion,Peso,Stock,CodCat FROM productos";
+        $resul = $bd->query($ins);
+
+        if(!$resul){
+            return FALSE;
+        }
+        if($resul->rowCount() === 0){
+            return FALSE;
+        }
+
+        return $resul;
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function eliminar_producto($CodProd){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "DELETE FROM productos WHERE codProd='$CodProd'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+}
+
+function insertar_producto($nombre,$descripcion,$peso,$stock,$codCat)
+{
+
+    try {
+        $bd = new PDO(CADENA_CONEXION, USUARIO_CONEXION, CLAVE_CONEXION);
+
+        $ins = "INSERT into productos(Nombre, Descripcion, Peso, Stock, CodCat) VALUES ('$nombre', '$descripcion', '$peso', '$stock', '$codCat')";
+        $resul = $bd->query($ins);
+
+        if (!$resul) {
+            return FALSE;
+        }
+
+        return $resul;
+
+    } catch (PDOException $e) {
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function actualizar_producto($CodProd,$nombre,$descripcion,$peso,$stock,$codCat){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "UPDATE productos SET Nombre='$nombre', Descripcion='$descripcion', Peso='$peso' , Stock='$stock' , CodCat='$codCat' WHERE codProd='$CodProd'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+
+}
+
+function  cargarProducto($codProd){
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $ins = "SELECT CodProd,Nombre,Descripcion,Peso,Stock,CodCat FROM productos WHERE CodProd='$codProd'";
+        $resul = $bd->query($ins);
+
+        if(!$resul){
+            return FALSE;
+        }
+        if($resul->rowCount() === 0){
+            return FALSE;
+        }
+
+        return $resul;
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+}
+
+
 

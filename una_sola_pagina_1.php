@@ -7,18 +7,23 @@
         <script type = "text/javascript" src = "js/cargarDatos.js"></script>
         <link rel="stylesheet" href="css/index.css">
     </head>	
-    <body>		
+    <body>
+
         <section id = "login">
+
             <form onsubmit="return login()" method = "POST">
-                Usuario: <input id = "usuario" type = "text">			
-                Clave: <input id = "clave" type = "password">					
+                <h2>Login</h2>
+               <input id = "usuario" type = "text">
+                <input id = "clave" type = "password">
                 <input type = "submit">
             </form>
         </section>
         <section id = "principal" style="display:none">
-            <header>
-                <?php require 'cabecera_json.php'; ?>
+            <header id="header">
+
             </header>
+            <div id="admin"></div>
+            <div id="error"></div>
             <h2 id = "titulo"></h2>
             <section id = "contenido"></section>			
         </section>

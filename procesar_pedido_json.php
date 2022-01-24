@@ -9,7 +9,10 @@
         echo "FALSE";			
     }else{
         echo "TRUE";
-        //vaciar carrito	
+        $productos = cargar_productos(array_keys($_SESSION["carrito"]));
+        foreach ($_SESSION["carrito"] as $key => $value) {
+            restar_stock($key, $value);
+        }
         $_SESSION['carrito'] = [];
     }		
 	

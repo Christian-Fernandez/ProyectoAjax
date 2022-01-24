@@ -9,9 +9,12 @@
             echo "FALSE";
         }else{
             session_start();
-            // $usu tiene campos correo y codRes, correo 
+            // $usu tiene campos correo y codRes, correo
+            $_SESSION['correo'] = $_POST['usuario'];
             $_SESSION['usuario'] = $usu;
             $_SESSION['carrito'] = [];
-            echo "TRUE";
+
+                echo "TRUE";
+
         }	
     }
