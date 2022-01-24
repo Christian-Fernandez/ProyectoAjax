@@ -6,7 +6,7 @@ function login(){
             //alert(this.responseText);
             if(this.responseText==="FALSE"){
                 document.getElementById("clave").value="";
-                alert("Revise usuario y contraseña");                                            
+                alert("Revise usuario y contraseña");
             }else if(this.responseText==="TRUE"){
                 cargarCabecera();
                 document.getElementById("principal").style.display= "block";
@@ -35,7 +35,7 @@ function cerrarSesionUnaPagina(){
         if (this.readyState == 4 && this.status == 200) {
             /*cambiar visibilidades de las secciones*/
             document.getElementById("principal").style.display= "none";
-            document.getElementById("login").style.display= "block";
+            document.getElementById("login").style.display= "";
             document.getElementById("contenido").innerHTML = "";
             alert("Sesion cerrada con éxito");									
         }

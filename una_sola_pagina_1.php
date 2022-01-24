@@ -8,9 +8,7 @@
         <link rel="stylesheet" href="css/index.css">
     </head>	
     <body>
-
         <section id = "login">
-
             <form onsubmit="return login()" method = "POST">
                 <h2>Login</h2>
                <input id = "usuario" type = "text">

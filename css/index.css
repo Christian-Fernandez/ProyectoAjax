@@ -153,18 +153,26 @@ nav a {
 
 }
 
+
 form {
-    position: fixed;
-    top: 50%;
-    left: 50%;
+
     width: 450px;
     border: 1px solid #E1E1E1;
     border-radius: 10px;
     padding: 15px;
-    transform: translate(-50%, -50%);
     background-color: white;
     text-align: center;
+    margin: 0 auto;
 
+}
+
+#login{
+    /*IMPORTANTE*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
 }
 
 
@@ -323,18 +331,7 @@ body{
     font-size: 16px;
 }
 
-form {
-    position:fixed;
-    top:50%;
-    left:50%;
-    width:350px;
-    border: 1px solid #E1E1E1;
-    border-radius:10px;
-    padding: 15px;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    text-align: center;
-}
+
 
 input[type="text"] {
     position: relative;
@@ -377,5 +374,42 @@ input[type="submit"]:hover{
     color: red;
     font-size: 14px;
 }
+
+ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    padding-right: 20px;
+}
+li{
+
+    line-height: 80px;
+
+}
+
+.ul li a {
+    display:block;
+    color: black;
+    border: 1px black solid;
+    border-radius: 5px;
+    text-decoration:none;
+    padding:60px 20px;
+    line-height:normal;
+    font-size:20px;
+    font-weight:bold;
+    width: 50%;
+    margin: 10px auto;
+    text-align: center;
+
+
+}
+
+
+.ul li a:hover {
+    background: #5691f1;
+}
+
+
+
 
 

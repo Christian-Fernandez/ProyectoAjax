@@ -7,7 +7,7 @@ if (!comprobar_sesion()) {
 }
 
 echo json_encode([
-    "pedidos" => cargarPedidos($_SESSION["usuario"]),
+    "pedidos" => cargarPedidos($_SESSION["usuarios"]),
 ]);
 
 ?>

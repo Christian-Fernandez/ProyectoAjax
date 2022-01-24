@@ -4,6 +4,7 @@ function cargarCategorias() {
             if (xhttp.readyState == 4 && xhttp.status == 200) {
                 var cats =  JSON.parse(xhttp.responseText);	
                 var lista = document.createElement("ul");
+                lista.classList.add("ul");
                 document.getElementById("admin").innerHTML="";
                 for(var i = 0; i < cats.length; i++){
                     var elem = document.createElement("li");
@@ -77,6 +78,7 @@ function crearFormulario(texto, cod, funcion){
     var unidades = document.createElement("input");
     unidades.value = 1;
     unidades.name = "unidades";
+    unidades.type="number";
     var codigo = document.createElement("input");
     codigo.value = cod;
     codigo.type = "hidden";
@@ -168,6 +170,7 @@ function crearTablaCarrito(productos){
     for(var i = 0; i < productos.length; i++){
         //creamos el formulario que se muestra en el carrito con la opción de eliminar prodcutos
         formu = crearFormulario("Eliminar", productos[i].CodProd, eliminarProductos);
+        formu.classList.add("formu");
         //creamos la fila con los productos que contiene el carrito
         fila = crear_fila([productos[i].CodProd, productos[i].Nombre, productos[i].Descripcion,productos[i].unidades], "td");
         celda_form = document.createElement("td");
@@ -224,11 +227,10 @@ function cargarPedidos(){
                 throw new Error(response.status);
         })
         .then(data => {
-
             document.getElementById("admin").innerHTML="";
             titulo.innerHTML = "Pedidos";
             var contenido = document.getElementById("contenido");
-           let tabla = "<table><tr class='primera'><th>Núm.Pedido</th><th>Fecha</th><th>Enviado</th></tr>";
+           let tabla = "<table><tr class='primera'><th>Núm.Pedido</th><th>Fecha</th><th>Enviado</th><th>Descargar Ticket</th> </tr>";
            let enviado;
            let cod="null";
            let num = 0;
@@ -238,11 +240,11 @@ function cargarPedidos(){
                if(num<5) {
 
                    if (data.pedidos[i].CodPed == cod) {
-                       tabla += `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td></tr>`;
+                       tabla += `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td><td></td></tr>`;
                    } else {
                        num++;
-                       tabla += `<tr class="segunda"><th>${data.pedidos[i].CodPed}</th><th>${data.pedidos[i].Fecha}</th><th>${enviado}</th></tr><tr class="thProductos"><th>Producto</th><th>Descripción</th><th>Cantidad</th></tr>` +
-                           `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td></tr>`;
+                       tabla += `<tr class="segunda"><th>${data.pedidos[i].CodPed}</th><th>${data.pedidos[i].Fecha}</th><th>${enviado}</th><th><a title=\"Descargar Archivo\" href=\"pedidos/${data.pedidos[i].CodPed}.txt\" download=\"Ticket_${data.pedidos[i].CodPed}.txt\"> Descargar Ticket </a></th></tr><tr class="thProductos"><th>Producto</th><th>Descripción</th><th>Cantidad</th><th></th> </tr>` +
+                           `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td><td></td></tr>`;
                    }
                    cod = data.pedidos[i].CodPed;
                }
@@ -645,8 +647,25 @@ function eliminarProductosBack(id) {
     return false;
 }
 
+function cargarPedidosBack() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            var contenido = document.getElementById("contenido");
+            contenido.innerHTML="";
+            let tabla = "<table><tr><th>CodProd</th><th>Nombre</th><th>Descripción</th><th>Peso</th><th>Stock</th><th>CodCat</th><th></th><th> </th></tr>";
+            var ped =  JSON.parse(xhttp.responseText);
+            contenido.innerHTML=""
+            for(var i = 0; i < prods.length; i++){
+                tabla += `<tr><td> ${prods[i].CodProd} </td><td> ${prods[i].Nombre} </td><td> ${prods[i].Descripcion} </td><td> ${prods[i].Peso}</td><td> ${prods[i].Stock}</td><td> ${prods[i].CodCat}</td><td><a href='#' onclick="productosBack(${prods[i].CodProd},${prods[i].CodCat})">Editar</a></td><td><a href='#' onclick="eliminarProductosBack(${prods[i].CodProd})">Eliminar</a></td></tr>`;
+            }
 
-
-
-
+            tabla += "<tr><td colspan='8'><a href='#' onclick='nuevosProductosBack()'>Crear Nuevo Pedido</a></td></tr></table>";
+            contenido.innerHTML=tabla;
+        }
+    };
+    xhttp.open("GET", "back-end-pedidos_json.php?pedido=true", true);
+    xhttp.send();
+    return false;
+}
 

@@ -1,8 +1,8 @@
 <?php
 
 define("CADENA_CONEXION", 'mysql:dbname=pedidos;host=127.0.0.1');
-define("USUARIO_CONEXION", 'root');
-define("CLAVE_CONEXION", '');
+define("USUARIO_CONEXION", 'ciclost');
+define("CLAVE_CONEXION", 'toor');
 
 function comprobar_usuario($nombre, $clave){
     try{
@@ -11,6 +11,23 @@ function comprobar_usuario($nombre, $clave){
         $resul = $bd->query($ins);
         if($resul ->rowCount() === 1){
             return TRUE;
+        }
+        else{
+            //echo "<p><h2>Usuario no registrado</h2></p>";
+            return FALSE;
+        }
+    } catch (Exception $ex) {
+        echo "Error con la base de datos: " . $ex->getMessage();
+    }
+}
+
+function comprobarUsuarios($nombre, $clave){
+    try{
+        $bd = new PDO(CADENA_CONEXION, USUARIO_CONEXION, CLAVE_CONEXION);
+        $ins = "SELECT CodRes FROM restaurantes WHERE Correo='$nombre' and Clave = '$clave'";
+        $resul = $bd->query($ins);
+        if($resul ->rowCount() === 1){
+            return $resul->fetch()["CodRes"];
         }
         else{
             //echo "<p><h2>Usuario no registrado</h2></p>";
@@ -122,7 +139,7 @@ function cargarPedidos($res){
         $ins = "select pd.CodPed,pd.Fecha,pd.Enviado,p.Nombre,p.Descripcion,ped.Unidades
                 from pedidos as pd JOIN pedidosproductos as ped on pd.CodPed = ped.CodPed
                 JOIN productos as p on p.CodProd = ped.CodProd
-                where pd.Restaurante ORDER BY pd.Fecha DESC; = $res";
+                where pd.Restaurante = $res ORDER BY pd.Fecha DESC;";
         $resul = $bd->query($ins);
         if(!$resul){
             return FALSE;
@@ -428,6 +445,55 @@ function  cargarProducto($codProd){
     }
 
 }
+
+
+
+function ticket(){
+
+    $tickets=cargarPedidos($_SESSION['usuarios']);
+    $contador=0;
+    $name="";
+    $datos="";
+    foreach($tickets as $ele){
+        if($lastId!=$ele["CodPed"]){
+            $contador++;
+        }
+        if($lastId!=$ele["CodPed"] && $contador<=1){
+            $name=$ele["CodPed"];
+            $enviado=$ele["Enviado"]==1?'Si':'No';
+
+            $datos="Código de pedido: ".$ele["CodPed"]."\n";
+
+            $datos.="Enviado: ".$enviado."\n";
+
+            $datos.="Fecha: ".$ele["Fecha"]."\n";
+
+            $datos.="Productos del pedido: \n";
+
+            $datos.="=========================\n";
+
+            $datos.="Nombre: ".$ele["Nombre"]."\n";
+
+            $datos.="Descripción: ".$ele["Descripcion"]."\n";
+
+            $datos.="Unidades: ".$ele["Unidades"]."\n";
+        }
+        if($lastId==$ele["CodPed"] && $contador<=1){
+
+            $datos.="=========================\n";
+
+            $datos.="Nombre: ".$ele["Nombre"]."\n";
+
+            $datos.="Descripción: ".$ele["Descripcion"]."\n";
+
+            $datos.="Unidades: ".$ele["Unidades"]."\n";
+        }
+        $lastId=$ele["CodPed"];
+    }
+    file_put_contents("pedidos/".$name.".txt",$datos);
+}
+
+
 
 
 
