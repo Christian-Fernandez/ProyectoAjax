@@ -20,6 +20,8 @@
             <header id="header">
 
             </header>
+            <nav id="navAdmin"></nav>
+            <div id='carri'></div>
             <div id="admin"></div>
             <div id="error"></div>
             <h2 id = "titulo"></h2>

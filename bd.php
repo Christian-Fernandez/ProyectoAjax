@@ -493,7 +493,25 @@ function ticket(){
     file_put_contents("pedidos/".$name.".txt",$datos);
 }
 
+function  cargarPedido(){
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
 
+        $ins = "SELECT * FROM pedidos";
+        $resul = $bd->query($ins);
+
+        if(!$resul){
+            return FALSE;
+        }
+        if($resul->rowCount() === 0){
+            return FALSE;
+        }
+
+        return $resul;
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
 
 
 
