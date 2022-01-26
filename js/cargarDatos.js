@@ -306,6 +306,8 @@ function cargarCategoriasBack() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             var contenido = document.getElementById("contenido");
             var pedidos = document.getElementById("carri");
+            var titulo = document.getElementById("titulo");
+            titulo.innerHTML="ADMINISTRACIÓN"
             pedidos.innerHTML="";
             contenido.innerHTML="";
             let tabla = "<table><tr><th>CodCat</th><th>Nombre</th><th>Descripción</th><th></th><th></th></tr>";
@@ -383,9 +385,9 @@ function categoriasBack(id) {
             var contenido = document.getElementById("contenido");
             let categoria = JSON.parse(xhttp.responseText);
             console.log();
-            document.getElementById("titulo").innerHTML="Crear Nueva Categoria";
+            document.getElementById("titulo").innerHTML="Editar Categoria";
             contenido.innerHTML="";
-            contenido.innerHTML = `<form onsubmit="return editarCategoriasBack()" method = 'POST'><label for='nombre'>Nombre:</label><input type='text' id='nombre' name='nombre' value="${categoria[0].Nombre}"  required><label for='descripcion'>Descripción:</label><textarea name='descripcion' id='descripcion' cols='30' rows='5'  required>${categoria[0].Descripcion}</textarea><div> <a href='#' onclick='cargarCategoriasBack()'>Cancelar</a><input type='hidden' id="cod" value="${categoria[0].Codcat}"><input type='submit' value='Editar'></div></form>`;
+            contenido.innerHTML = `<form onsubmit="return editarCategoriasBack()" method = 'POST'><label for='nombre'>Nombre:</label><input type='text' id='nombre' name='nombre' value="${categoria[0].Nombre}"  required><label for='descripcion'>Descripción:</label><textarea name='descripcion' id='descripcion' cols='30' rows='5'  required>${categoria[0].Descripcion}</textarea><div> <a href='#' onclick='cargarCategoriasBack()'>Cancelar</a><input type='hidden' id="cod" value="${categoria[0].Codcat}"><input type='submit' value='Actualizar'></div></form>`;
 
         }
     };
@@ -424,6 +426,8 @@ function cargarUsuariosBack() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             var contenido = document.getElementById("contenido");
             contenido.innerHTML="";
+            var titulo = document.getElementById("titulo");
+            titulo.innerHTML="ADMINISTRACIÓN"
             document.getElementById("carri").innerHTML="";
             let tabla = "<table><tr><th>CodRes</th><th>Correo</th><th>Clave</th><th>Pais</th><th>CP</th> <th>Ciudad</th> <th>Dirección</th><th></th><th> </th></tr>";
             var usus =  JSON.parse(xhttp.responseText);
@@ -447,7 +451,7 @@ function nuevosUsuariosBack() {
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             var contenido = document.getElementById("contenido");
-            document.getElementById("titulo").innerHTML="Crear Nueva Categoria";
+            document.getElementById("titulo").innerHTML="Crear Nuevo Usuario";
             contenido.innerHTML="";
             contenido.innerHTML = `<form onsubmit="return crearNuevosUsuariosBack()"  method = 'POST'><label for='nuevoCorreo'>Correo:</label> <input type='email' id='nuevoCorreo' name='nuevoCorreo' required> <label for='nuevaClave'>Contraseña:</label> <input type='password' id='nuevaClave' name='nuevaClave' required> <label for='nuevoPais'>Pais:</label> <input type='text' id='nuevoPais' name='nuevoPais' required> <label for='nuevoCp'>Código Postal:</label> <input type='text' id='nuevoCp' name='nuevoCp'> <label for='nuevaCiudad'>Ciudad:</label> <input type='text' id='nuevaCiudad' name='nuevaCiudad' required> <label for='nuevaDireccion'>Dirección:</label> <input type='text' id='nuevaDireccion' name='nuevaDireccion' required> <div> <a href='#' onclick="cargarUsuariosBack()">Cancelar</a><input type='submit' value='Crear'></div> </form>`;
 
@@ -548,6 +552,8 @@ function cargarProductosBack() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             var contenido = document.getElementById("contenido");
             contenido.innerHTML="";
+            var titulo = document.getElementById("titulo");
+            titulo.innerHTML="ADMINISTRACIÓN"
             let tabla = "<table><tr><th>CodProd</th><th>Nombre</th><th>Descripción</th><th>Peso</th><th>Stock</th><th>CodCat</th><th></th><th> </th></tr>";
             var prods =  JSON.parse(xhttp.responseText);
             contenido.innerHTML=""
@@ -684,14 +690,16 @@ function cargarPedidosBack() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             var contenido = document.getElementById("contenido");
             contenido.innerHTML="";
+            var titulo = document.getElementById("titulo");
+            titulo.innerHTML="ADMINISTRACIÓN"
             let tabla = "<table><tr><th>CodPed</th><th>Fecha</th><th>Enviado</th><th>Restaurante</th><th></th><th> </th></tr>";
             var ped =  JSON.parse(xhttp.responseText);
             contenido.innerHTML=""
             for(var i = 0; i < ped.length; i++){
-                tabla += `<tr><td> ${ped[i].CodPed} </td><td> ${ped[i].Fecha} </td><td>${ped[i].Enviado}</td><td>${ped[i].Restaurante}</td><td><a href='#' onclick="pedidosBack(${ped[i].CodPed},${ped[i].Restaurante})">Editar</a></td><td><a href='#' onclick="eliminarPedidosBack(${ped[i].CodPed})">Eliminar</a></td></tr>`;
+                tabla += `<tr><td> ${ped[i].CodPed} </td><td> ${ped[i].Fecha} </td><td>${ped[i].Enviado}</td><td>${ped[i].Restaurante}</td><td><a href='#' onclick="pedidosBack(${ped[i].CodPed})">Editar</a></td><td><a href='#' onclick="eliminarPedidosBack(${ped[i].CodPed})">Eliminar</a></td></tr>`;
             }
 
-            tabla += "<tr><td colspan='8'><a href='#' onclick='nuevosProductosBack()'>Crear Nuevo Pedido</a></td></tr></table>";
+            tabla += "<tr><td colspan='8'><a href='#' onclick='nuevosPedidosBack()'>Crear Nuevo Pedido</a></td></tr></table>";
             contenido.innerHTML=tabla;
         }
     };
@@ -700,42 +708,246 @@ function cargarPedidosBack() {
     return false;
 }
 
-function pedidosBack() {
+function pedidosBack(CodPed) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             let ped =  JSON.parse(xhttp.responseText);
-
             var contenido = document.getElementById("contenido");
             document.getElementById("titulo").innerHTML="Editar Pedidos";
             contenido.innerHTML="";
-            let form = `<form  onsubmit="return editarPedidosBack()"  method = 'POST'> <label for='Fecha'>Fecha:</label> <input type='date' id='fecha' value="${ped.pedido[0].Fecha}" required> <label for='enviado'>Enviado:</label> <select id="enviado">` ;
+            let form = `<form  onsubmit="return editarPedidosBack()"  method = 'POST'> <label for='Fecha'>Fecha:</label> <input type='text' id='fecha' value="${ped.pedido[0].Fecha}" required> <label for='enviado'>Enviado:</label> <select id="enviado">` ;
 
                 if(ped.pedido[0].Enviado == 0){
-                    form +=  `<option value="${ped.pedido[0].Enviado}" selected>No</option><option value="${ped.pedido[0].Enviado}">Si</option>`;
+                    form +=  `<option value="0" selected>No</option><option value="1">Si</option>`;
                 }else{
-                    form +=  `<option value="${ped.pedido[0].Enviado}">No</option><option selected value="${ped.pedido[0].Enviado}">Si</option>`;
+                    form +=  `<option value="0">No</option><option selected value="1">Si</option>`;
                 }
-    //<label for='peso'>Peso:</label> <input type='number' id='peso' name='nuevoPeso' value="${prod.productos[0].Peso}" min='0' required> <label for='stock'>Stock:</label> <input type='number' id='stock' value="${prod.productos[0].Stock}" name='nuevoStock' min='0' required> <label for='CodCat'>Categoría:</label><select name='nuevoCodCat' id='CodCat'>`
-            form += `</select> <select id="restaurante">`
+            form += `</select> <label for='restaurante'>Restaurante:</label><select id="restaurante">`
             for (let i=0 ; i<ped.usuarios.length;i++){
-                if(ped.usuarios[i]==ped.pedido[0].Restaurante){
+                if(ped.usuarios[i]==ped.pedido.Restaurante){
                     form += `<option value="${ped.usuarios[i].CodRes}" selected>${ped.usuarios[i].CodRes}</option>`;
                 }else{
                     form += `<option value="${ped.usuarios[i].CodRes}">${ped.usuarios[i].CodRes}</option>`;
                 }
             }
-            form += `</select><div><input id="cod" type="hidden" value="${codProd}"> <a href='#' onclick="cargarProductosBack()">Cancelar</a><input type='submit' value='Actualizar'></div></form>`;
+            form += `</select><div><input id="cod" type="hidden" value="${ped.pedido[0].CodPed}"> <a href='#' onclick="cargarPedidosBack()">Cancelar</a><input type='submit' value='Actualizar'></div></form>`;
             contenido.innerHTML = form;
         }
     };
-    xhttp.open("GET", `back-end-productos_json.php?editar=${codProd}`, true);
+    xhttp.open("GET", `back-end-pedidos_json.php?editar=${CodPed}`, true);
     xhttp.send();
     return false;
 }
 
+function editarPedidosBack() {
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+            if(this.responseText=="false"){
+                document.getElementById("error").innerHTML="No se ha podido actualizar el usuario";
+            }else{
+                cargarPedidosBack();
+            }
+        }
+    };
+
+    let codped = document.getElementById("cod").value;
+    let fecha = document.getElementById("fecha").value;
+    let enviado = document.getElementById("enviado").value;
+    let restaurante = document.getElementById("restaurante").value;
+    var params = "CodPed=" + codped + "&Fecha=" + fecha + "&Enviado=" + enviado + "&Restaurante=" + restaurante;
+    xhttp.open("POST", "back-end-pedidos_json.php", true);
+    xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhttp.send(params);
+    return false;
+}
+
+function nuevosPedidosBack() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            var contenido = document.getElementById("contenido");
+            let ped =  JSON.parse(xhttp.responseText);
+            document.getElementById("titulo").innerHTML="Crear Nuevos Pedidos";
+            contenido.innerHTML="";
+            let form = `<form  onsubmit="return crearNuevosPedidosBack()"  method = 'POST'> <label for='Fecha'>Fecha:</label> <input type='text' id='fecha' required> <label for='enviado'>Enviado:</label> <select id="enviado">` ;
+            form +=  `<option value="0">No</option><option value="1">Si</option>`;
+            form += `</select> <label for="restaurante">Restaurante:</label><select id="restaurante">`
+            for (let i=0 ; i<ped.usuarios.length;i++){
+                form += `<option value="${ped.usuarios[i].CodRes}">${ped.usuarios[i].CodRes}</option>`;
+            }
+            form += `</select><div><a href='#' onclick="cargarPedidosBack()">Cancelar</a><input type='submit' value='Crear'></div></form>`;
+            contenido.innerHTML = form;
+        }
+    };
+    xhttp.open("GET", `back-end-pedidos_json.php?nuevoPedido=true`, true);
+    xhttp.send();
+    return false;
+}
+
+function crearNuevosPedidosBack() {
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+            if(this.responseText=="false"){
+                document.getElementById("error").innerHTML="No se ha podido añadir el pedido";
+            }else{
+                cargarPedidosBack();
+            }
+        }
+    };
+
+    let fecha = document.getElementById("fecha").value;
+    let enviado = document.getElementById("enviado").value;
+    let restaurante = document.getElementById("restaurante").value;
+
+    var params = "nuevaFecha=" + fecha + "&nuevoEnviado=" + enviado + "&nuevoRestaurante=" + restaurante;
+    xhttp.open("POST", "back-end-pedidos_json.php", true);
+    xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhttp.send(params);
+    return false;
+}
 
 
+function eliminarPedidosBack(id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            cargarPedidosBack();
+        }
+    };
+    xhttp.open("GET", `back-end-pedidos_json.php?id=${id}&borrar=true`, true);
+    xhttp.send();
+    return false;
+}
+
+//PedidosProductos
+
+function cargarPedidosProductosBack() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            var contenido = document.getElementById("contenido");
+            var titulo = document.getElementById("titulo");
+            titulo.innerHTML="ADMINISTRACION"
+            contenido.innerHTML="";
+            let tabla = "<table><tr><th>CodPredProd</th><th>CodPed</th><th>CodProd</th><th>Unidades</th><th></th><th> </th></tr>";
+            var ped =  JSON.parse(xhttp.responseText);
+            contenido.innerHTML=""
+            for(var i = 0; i < ped.length; i++){
+                tabla += `<tr><td> ${ped[i].CodPredProd} </td><td> ${ped[i].CodPed} </td><td>${ped[i].CodProd}</td><td>${ped[i].Unidades}</td><td><a href='#' onclick="pedidosProductosBack(${ped[i].CodPredProd})">Editar</a></td><td><a href='#' onclick="eliminarPedidosProductosBack(${ped[i].CodPredProd})">Eliminar</a></td></tr>`;
+            }
+
+            tabla += "<tr><td colspan='8'><a href='#' onclick='nuevosPedidosProductosBack()'>Crear Nuevo PedidoProducto</a></td></tr></table>";
+            contenido.innerHTML=tabla;
+        }
+    };
+    xhttp.open("GET", "back-end-pedidosProductos_json.php?pedidoProducto=true", true);
+    xhttp.send();
+    return false;
+}
+
+function pedidosProductosBack(CodPed) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            let ped =  JSON.parse(xhttp.responseText);
+            var contenido = document.getElementById("contenido");
+            document.getElementById("titulo").innerHTML="Editar Pedidos";
+            contenido.innerHTML="";
+            let form = `<form onsubmit='return editarPedidosProductosBack()'  method = 'POST'> <label for='nuevoCodPed'>Código Pedido:</label> <input type='number' id='nuevoCodPed' name='nuevoCodPed' value='${ped[0].CodPed}' required> <label for='nuevoCodProd'>Código Producto:</label> <input type='number' value="${ped[0].CodProd}" name='nuevoCodProd' id='nuevoCodProd' required> <label for='nuevaUnidades'>Unidades:</label> <input type='number' value="${ped[0].Unidades}" name='nuevaUnidades' id='nuevaUnidades' required><input type='hidden' value="${ped[0].CodPredProd}"  id='CodPredProd' required> <div> <a href='#' onclick='cargarPedidosProductosBack()'>Cancelar</a> <input type='submit' value='Actualizar'></div> </form>`;
+            contenido.innerHTML=form;
+        }
+    };
+    xhttp.open("GET", `back-end-pedidosProductos_json.php?editar=${CodPed}`, true);
+    xhttp.send();
+    return false;
+}
+
+function editarPedidosProductosBack() {
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+            if(this.responseText=="false"){
+                document.getElementById("error").innerHTML="No se ha podido actualizar el usuario";
+            }else{
+                cargarPedidosProductosBack();
+            }
+        }
+    };
+
+    let CodPed = document.getElementById("nuevoCodPed").value;
+    let CodProd = document.getElementById("nuevoCodProd").value;
+    let Unidades = document.getElementById("nuevaUnidades").value;
+    let CodPredProd = document.getElementById("CodPredProd").value;
+
+    var params = "codPedido=" + CodPed + "&codProd=" + CodProd + "&unidades=" + Unidades + "&codPred=" + CodPredProd;
+    xhttp.open("POST", "back-end-pedidosProductos_json.php", true);
+    xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhttp.send(params);
+    return false;
+}
+
+function nuevosPedidosProductosBack() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            var contenido = document.getElementById("contenido");
+            document.getElementById("titulo").innerHTML="Nuevos Pedidos";
+            contenido.innerHTML="";
+            let form = "<form onsubmit='return crearNuevosPedidosProductosBack()'  method = 'POST'> <label for='nuevoCodPed'>Código Pedido:</label> <input type='number' id='nuevoCodPed' name='nuevoCodPed'required> <label for='nuevoCodProd'>Código Producto:</label> <input type='number' name='nuevoCodProd' id='nuevoCodProd' required> <label for='nuevaUnidades'>Unidades:</label> <input type='number' name='nuevaUnidades' id='nuevaUnidades' required> <div> <a href='#' onclick='cargarPedidosProductosBack()'>Cancelar</a> <input type='submit' value='Crear'></div> </form>";
+            contenido.innerHTML = form;
+        }
+    };
+    xhttp.open("GET", `back-end-pedidosProductos_json.php?nuevoPedidoProducto=true`, true);
+    xhttp.send();
+    return false;
+}
+
+function crearNuevosPedidosProductosBack() {
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+            if(this.responseText=="false"){
+                document.getElementById("error").innerHTML="No se ha podido añadir el pedido";
+            }else{
+                cargarPedidosProductosBack();
+            }
+        }
+    };
+
+    let CodPed = document.getElementById("nuevoCodPed").value;
+    let CodProd = document.getElementById("nuevoCodProd").value;
+    let Unidades = document.getElementById("nuevaUnidades").value;
+
+    var params = "nuevoCodPed=" + CodPed + "&nuevoCodProd=" + CodProd + "&nuevaUnidades=" + Unidades;
+    xhttp.open("POST", "back-end-pedidosProductos_json.php", true);
+    xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xhttp.send(params);
+    return false;
+}
+
+
+function eliminarPedidosProductosBack(id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            cargarPedidosProductosBack();
+        }
+    };
+    xhttp.open("GET", `back-end-pedidosProductos_json.php?id=${id}&borrar=true`, true);
+    xhttp.send();
+    return false;
+}
 
 
 function cargarMiniCarrito(){
@@ -763,6 +975,7 @@ function cargarMiniCarrito(){
     xhttp.send();
     return false;
 }
+
 function cargarNavAdmin(){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -785,5 +998,3 @@ function cargarNavAdmin(){
     xhttp.send();
     return false;
 }
-
-

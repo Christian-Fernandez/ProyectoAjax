@@ -429,4 +429,14 @@ h2{
     font-weight:bold;
 }
 
+p{
+    text-align: center;
+    font-size: 20px;
+}
+
+div p{
+    text-align: center;
+    font-size: 11px;
+}
+
 

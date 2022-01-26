@@ -1,8 +1,8 @@
 <?php
 
 define("CADENA_CONEXION", 'mysql:dbname=pedidos;host=127.0.0.1');
-define("USUARIO_CONEXION", 'ciclost');
-define("CLAVE_CONEXION", 'toor');
+define("USUARIO_CONEXION", 'root');
+define("CLAVE_CONEXION", '');
 
 function comprobar_usuario($nombre, $clave){
     try{
@@ -513,5 +513,191 @@ function  cargarPedido(){
     }
 }
 
+function actualizar_pedidos($CodPed,$Fecha,$Enviado,$Restaurante){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "UPDATE pedidos SET Fecha='$Fecha',Enviado='$Enviado',Restaurante='$Restaurante' WHERE CodPed='$CodPed'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+
+}
+
+function  cargar_Pedido($cod){
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $ins = "SELECT * FROM pedidos where CodPed = '$cod'";
+        $resul = $bd->query($ins);
+
+        if(!$resul){
+            return FALSE;
+        }
+        if($resul->rowCount() === 0){
+            return FALSE;
+        }
+
+        return $resul;
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function insertarPedido($Fecha,$Enviado,$Restaurante)
+{
+
+    try {
+        $bd = new PDO(CADENA_CONEXION, USUARIO_CONEXION, CLAVE_CONEXION);
+
+        $ins = "INSERT into pedidos(Fecha, Enviado, Restaurante) VALUES ('$Fecha', '$Enviado', '$Restaurante')";
+        $resul = $bd->query($ins);
+
+        if (!$resul) {
+            return FALSE;
+        }
+
+        return $resul;
+
+    } catch (PDOException $e) {
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function eliminar_pedido($CodPed){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "DELETE FROM pedidos WHERE CodPed='$CodPed'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+}
+
+function insertarPedidoProducto($codPed,$codProd,$unidades)
+{
+
+    try {
+        $bd = new PDO(CADENA_CONEXION, USUARIO_CONEXION, CLAVE_CONEXION);
+
+        $ins = "INSERT into pedidosproductos(CodPed, CodProd,Unidades) VALUES ('$codPed', '$codProd', '$unidades')";
+        $resul = $bd->query($ins);
+
+        if (!$resul) {
+            return FALSE;
+        }
+
+        return $resul;
+
+    } catch (PDOException $e) {
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function cargarPedidosProductos(){
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $ins = "SELECT CodPredProd,CodPed,CodProd,Unidades FROM pedidosproductos";
+        $resul = $bd->query($ins);
+
+        if(!$resul){
+            return FALSE;
+        }
+        if($resul->rowCount() === 0){
+            return FALSE;
+        }
+
+        return $resul;
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+}
+
+function  cargarPedidoProducto($CodPredProd){
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $ins = "SELECT CodPredProd,CodPed,CodProd,Unidades FROM pedidosproductos WHERE CodPredProd='$CodPredProd'";
+        $resul = $bd->query($ins);
+
+        if(!$resul){
+            return FALSE;
+        }
+        if($resul->rowCount() === 0){
+            return FALSE;
+        }
+
+        return $resul;
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+}
+
+function actualizar_pedidoProducto($CodPredProd,$CodPed,$CodProd,$Unidades){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "UPDATE pedidosproductos SET CodPed='$CodPed', CodProd='$CodProd', Unidades='$Unidades' WHERE CodPredProd='$CodPredProd'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+
+}
+
+function eliminar_pedidoProducto($CodPredProd){
+
+    try{
+        $bd=new PDO(CADENA_CONEXION,USUARIO_CONEXION,CLAVE_CONEXION);
+
+        $sel = "DELETE FROM pedidosproductos WHERE CodPredProd='$CodPredProd'";
+
+        $resul = $bd->query($sel);
+
+        if(!$resul){
+            return FALSE;
+        }
+
+        return $resul;
+
+    }catch(PDOException $e){
+        echo "Error con la base de datos:" . $e->getMessage();
+    }
+
+}
 
 

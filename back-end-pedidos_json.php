@@ -8,7 +8,7 @@ if (comprobar_sesion_admin() === FALSE) {
 
 function comprobarDatos()
 {
-    if (isset($_POST["codProd"]) && isset($_POST["nombre"]) && isset($_POST["descripcion"]) && isset($_POST["peso"]) && isset($_POST["stock"]) && isset($_POST["CodCat"])) {
+    if (isset($_POST["CodPed"]) && isset($_POST["Fecha"]) && isset($_POST["Enviado"]) && isset($_POST["Restaurante"])){
         return true;
     } else {
         return false;
@@ -17,7 +17,7 @@ function comprobarDatos()
 
 function comprobarNuevosDatos()
 {
-    if (isset($_POST["nuevoNombre"]) && isset($_POST["nuevaDescripcion"]) && isset($_POST["nuevoStock"]) && isset($_POST["nuevoPeso"]) && isset($_POST["nuevoCodCat"])) {
+    if (isset($_POST["nuevaFecha"]) && isset($_POST["nuevoEnviado"]) && isset($_POST["nuevoRestaurante"])) {
         return true;
     } else {
         return false;
@@ -28,20 +28,22 @@ function comprobarNuevosDatos()
 if (!isset($_GET["pedido"])) {
 
     if (isset($_GET["nuevoPedido"])) {
-        $pedidos = cargarPedido();
-        $ped_json = json_encode(iterator_to_array($pedidos), true);
-        echo $ped_json;
+        echo json_encode([
+            "usuarios" => iterator_to_array(cargar_usuarios()),
+        ]);
     } else if (comprobarNuevosDatos()) {
-        insertar_producto($_POST["nuevoNombre"], $_POST["nuevaDescripcion"], $_POST["nuevoPeso"], $_POST["nuevoStock"], $_POST["nuevoCodCat"]);
+        insertarPedido($_POST["nuevaFecha"], $_POST["nuevoEnviado"], $_POST["nuevoRestaurante"]);
     } else if (isset($_GET["id"]) || isset($_GET["borrar"])) {
-        eliminar_producto($_GET["id"]);
+        eliminar_pedido($_GET["id"]);
     } else if (comprobarDatos()) {
-        actualizar_producto($_POST["codProd"], $_POST["nombre"], $_POST["descripcion"], $_POST["peso"], $_POST["stock"], $_POST["CodCat"]);
+        actualizar_pedidos($_POST["CodPed"], $_POST["Fecha"], $_POST["Enviado"], $_POST["Restaurante"]);
     } else {
 
-        $pedidos = cargarPedido();
-        $ped_json = json_encode(iterator_to_array($pedidos), true);
-        echo $ped_json;
+        echo json_encode([
+            "pedido" => iterator_to_array(cargar_Pedido($_GET["editar"])),
+            "usuarios" => iterator_to_array(cargar_usuarios()),
+        ]);
+
     }
 } else {
 
