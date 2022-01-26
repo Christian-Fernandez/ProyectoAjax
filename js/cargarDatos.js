@@ -4,7 +4,9 @@ function cargarCategorias() {
             if (xhttp.readyState == 4 && xhttp.status == 200) {
                 var cats =  JSON.parse(xhttp.responseText);	
                 var lista = document.createElement("ul");
+                lista.classList.add("ul");
                 document.getElementById("admin").innerHTML="";
+                cargarMiniCarrito();
                 for(var i = 0; i < cats.length; i++){
                     var elem = document.createElement("li");
                     //creamos los vínculos de cada categoría
@@ -36,6 +38,7 @@ function cargarProductos(destino){
             var titulo = document.getElementById("titulo");
             titulo.innerHTML ="Productos";
             try{
+                cargarMiniCarrito();
                 document.getElementById("admin").innerHTML="";
                 var filas =  JSON.parse(this.responseText);
                 // creamos una tabla con los productos de la categoría seleccionada
@@ -77,6 +80,7 @@ function crearFormulario(texto, cod, funcion){
     var unidades = document.createElement("input");
     unidades.value = 1;
     unidades.name = "unidades";
+    unidades.type="number";
     var codigo = document.createElement("input");
     codigo.value = cod;
     codigo.type = "hidden";
@@ -95,6 +99,7 @@ function crear_fila(campos, tipo){
     var fila = document.createElement("tr");
     for(var i = 0; i < campos.length; i++){
         var celda = document.createElement(tipo);
+        celda.classList.add(tipo);
         celda.innerHTML = campos[i];
         fila.appendChild(celda);
     }
@@ -106,6 +111,7 @@ function anadirProductos(formulario){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             alert("Producto añadido con éxito");
+            cargarMiniCarrito();
         }
     };
     var params = "cod=" + formulario.elements['cod'].value + "&unidades=" + formulario.elements['unidades'].value;
@@ -122,10 +128,11 @@ function cargarCarrito(){
         if (this.readyState == 4 && this.status == 200) {
                 var contenido = document.getElementById("contenido");
                 contenido.innerHTML = "";
+
                 var titulo = document.getElementById("titulo");
                 titulo.innerHTML = "Carrito de la compra";
                 try{
-                    document.getElementById("admin").innerHTML="";
+
                     var filas =  JSON.parse(this.responseText);
                     //creamos la tabla de los productos añadidos al carrito
                     tabla = crearTablaCarrito(filas);				
@@ -141,12 +148,14 @@ function cargarCarrito(){
                     }
                     contenido.appendChild(procesar);
                 }catch(e){
+                    document.getElementById("carri").innerHTML="";
                     var mensaje = document.createElement("p");
                     mensaje.innerHTML = "Todavía no tienes productos";
                     contenido.appendChild(mensaje);
                 }			
 
         }else{
+            document.getElementById("carri").innerHTML="";
             var contenido = document.getElementById("contenido");
             contenido.innerHTML = "";
             var titulo = document.getElementById("titulo");
@@ -168,6 +177,7 @@ function crearTablaCarrito(productos){
     for(var i = 0; i < productos.length; i++){
         //creamos el formulario que se muestra en el carrito con la opción de eliminar prodcutos
         formu = crearFormulario("Eliminar", productos[i].CodProd, eliminarProductos);
+        formu.classList.add("formu");
         //creamos la fila con los productos que contiene el carrito
         fila = crear_fila([productos[i].CodProd, productos[i].Nombre, productos[i].Descripcion,productos[i].unidades], "td");
         celda_form = document.createElement("td");
@@ -175,6 +185,25 @@ function crearTablaCarrito(productos){
         fila.appendChild(celda_form);		
         tabla.appendChild(fila);		
     }						
+    return tabla;
+}
+
+function crearTablaMiniCarrito(productos){
+
+    var tabla = document.createElement("table");
+    tabla.classList.add("miniTabla");
+    var cabecera = 	crear_fila(["Nombre","Unidades"], "th");
+    tabla.appendChild(cabecera);
+    var tr = document.createElement("tr");
+    tr.innerHTML=`<td colspan="2"><a href='#' onclick='if(window.confirm("¿Deseas confirmar el pedido?"))procesarPedido();' class='procesarMini'>Realizar Pedido</a></td>`;
+    for(var i = 0; i < productos.length; i++){
+
+        //creamos la fila con los productos que contiene el carrito
+        fila = crear_fila([productos[i].Nombre,productos[i].unidades], "td");
+        tabla.appendChild(fila);
+    }
+
+    tabla.appendChild(tr);
     return tabla;
 }
 
@@ -204,6 +233,7 @@ function procesarPedido(){
             titulo.innerHTML ="Estado del pedido";
             if(this.responseText=="TRUE"){
                 contenido.innerHTML = "Pedido realizado";
+                cargarMiniCarrito();
             }else{
                 contenido.innerHTML = "Error al procesar el pedido";
             }
@@ -224,11 +254,11 @@ function cargarPedidos(){
                 throw new Error(response.status);
         })
         .then(data => {
-
+            cargarMiniCarrito();
             document.getElementById("admin").innerHTML="";
             titulo.innerHTML = "Pedidos";
             var contenido = document.getElementById("contenido");
-           let tabla = "<table><tr class='primera'><th>Núm.Pedido</th><th>Fecha</th><th>Enviado</th></tr>";
+           let tabla = "<table><tr class='primera'><th>Núm.Pedido</th><th>Fecha</th><th>Enviado</th><th>Descargar Ticket</th> </tr>";
            let enviado;
            let cod="null";
            let num = 0;
@@ -238,11 +268,11 @@ function cargarPedidos(){
                if(num<5) {
 
                    if (data.pedidos[i].CodPed == cod) {
-                       tabla += `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td></tr>`;
+                       tabla += `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td><td></td></tr>`;
                    } else {
                        num++;
-                       tabla += `<tr class="segunda"><th>${data.pedidos[i].CodPed}</th><th>${data.pedidos[i].Fecha}</th><th>${enviado}</th></tr><tr class="thProductos"><th>Producto</th><th>Descripción</th><th>Cantidad</th></tr>` +
-                           `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td></tr>`;
+                       tabla += `<tr class="segunda"><th>${data.pedidos[i].CodPed}</th><th>${data.pedidos[i].Fecha}</th><th>${enviado}</th><th><a title=\"Descargar Archivo\" href=\"pedidos/${data.pedidos[i].CodPed}.txt\" download=\"Ticket_${data.pedidos[i].CodPed}.txt\"> Descargar Ticket </a></th></tr><tr class="thProductos"><th>Producto</th><th>Descripción</th><th>Cantidad</th><th></th> </tr>` +
+                           `<tr><td>${data.pedidos[i].Nombre}</td><td>${data.pedidos[i].Descripcion}</td><td>${data.pedidos[i].Unidades}</td><td></td></tr>`;
                    }
                    cod = data.pedidos[i].CodPed;
                }
@@ -275,6 +305,8 @@ function cargarCategoriasBack() {
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             var contenido = document.getElementById("contenido");
+            var pedidos = document.getElementById("carri");
+            pedidos.innerHTML="";
             contenido.innerHTML="";
             let tabla = "<table><tr><th>CodCat</th><th>Nombre</th><th>Descripción</th><th></th><th></th></tr>";
             var cats =  JSON.parse(xhttp.responseText);
@@ -392,6 +424,7 @@ function cargarUsuariosBack() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             var contenido = document.getElementById("contenido");
             contenido.innerHTML="";
+            document.getElementById("carri").innerHTML="";
             let tabla = "<table><tr><th>CodRes</th><th>Correo</th><th>Clave</th><th>Pais</th><th>CP</th> <th>Ciudad</th> <th>Dirección</th><th></th><th> </th></tr>";
             var usus =  JSON.parse(xhttp.responseText);
             contenido.innerHTML=""
@@ -641,6 +674,114 @@ function eliminarProductosBack(id) {
         }
     };
     xhttp.open("GET", `back-end-productos_json.php?id=${id}&borrar=true`, true);
+    xhttp.send();
+    return false;
+}
+
+function cargarPedidosBack() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            var contenido = document.getElementById("contenido");
+            contenido.innerHTML="";
+            let tabla = "<table><tr><th>CodPed</th><th>Fecha</th><th>Enviado</th><th>Restaurante</th><th></th><th> </th></tr>";
+            var ped =  JSON.parse(xhttp.responseText);
+            contenido.innerHTML=""
+            for(var i = 0; i < ped.length; i++){
+                tabla += `<tr><td> ${ped[i].CodPed} </td><td> ${ped[i].Fecha} </td><td>${ped[i].Enviado}</td><td>${ped[i].Restaurante}</td><td><a href='#' onclick="pedidosBack(${ped[i].CodPed},${ped[i].Restaurante})">Editar</a></td><td><a href='#' onclick="eliminarPedidosBack(${ped[i].CodPed})">Eliminar</a></td></tr>`;
+            }
+
+            tabla += "<tr><td colspan='8'><a href='#' onclick='nuevosProductosBack()'>Crear Nuevo Pedido</a></td></tr></table>";
+            contenido.innerHTML=tabla;
+        }
+    };
+    xhttp.open("GET", "back-end-pedidos_json.php?pedido=true", true);
+    xhttp.send();
+    return false;
+}
+
+function pedidosBack() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            let ped =  JSON.parse(xhttp.responseText);
+
+            var contenido = document.getElementById("contenido");
+            document.getElementById("titulo").innerHTML="Editar Pedidos";
+            contenido.innerHTML="";
+            let form = `<form  onsubmit="return editarPedidosBack()"  method = 'POST'> <label for='Fecha'>Fecha:</label> <input type='date' id='fecha' value="${ped.pedido[0].Fecha}" required> <label for='enviado'>Enviado:</label> <select id="enviado">` ;
+
+                if(ped.pedido[0].Enviado == 0){
+                    form +=  `<option value="${ped.pedido[0].Enviado}" selected>No</option><option value="${ped.pedido[0].Enviado}">Si</option>`;
+                }else{
+                    form +=  `<option value="${ped.pedido[0].Enviado}">No</option><option selected value="${ped.pedido[0].Enviado}">Si</option>`;
+                }
+    //<label for='peso'>Peso:</label> <input type='number' id='peso' name='nuevoPeso' value="${prod.productos[0].Peso}" min='0' required> <label for='stock'>Stock:</label> <input type='number' id='stock' value="${prod.productos[0].Stock}" name='nuevoStock' min='0' required> <label for='CodCat'>Categoría:</label><select name='nuevoCodCat' id='CodCat'>`
+            form += `</select> <select id="restaurante">`
+            for (let i=0 ; i<ped.usuarios.length;i++){
+                if(ped.usuarios[i]==ped.pedido[0].Restaurante){
+                    form += `<option value="${ped.usuarios[i].CodRes}" selected>${ped.usuarios[i].CodRes}</option>`;
+                }else{
+                    form += `<option value="${ped.usuarios[i].CodRes}">${ped.usuarios[i].CodRes}</option>`;
+                }
+            }
+            form += `</select><div><input id="cod" type="hidden" value="${codProd}"> <a href='#' onclick="cargarProductosBack()">Cancelar</a><input type='submit' value='Actualizar'></div></form>`;
+            contenido.innerHTML = form;
+        }
+    };
+    xhttp.open("GET", `back-end-productos_json.php?editar=${codProd}`, true);
+    xhttp.send();
+    return false;
+}
+
+
+
+
+
+function cargarMiniCarrito(){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("carri").innerHTML = "";
+
+            try{
+                document.getElementById("admin").innerHTML="";
+                var filas =  JSON.parse(this.responseText);
+                tabla = crearTablaMiniCarrito(filas);
+
+                document.getElementById("carri").innerHTML = tabla.outerHTML;
+
+            }catch(e){
+                document.getElementById("carri").innerHTML = `<p>Todavia no tienes Productos en el Carrito</p>`;
+            }
+
+        }else{
+            document.getElementById("carri").innerHTML = `<p>Todavia no tienes Productos en el Carrito</p>`;
+        }
+    };
+    xhttp.open("GET", "carrito_json.php", true);
+    xhttp.send();
+    return false;
+}
+function cargarNavAdmin(){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+
+            try{
+                document.getElementById("titulo").innerHTML="ADMINISTRACIÓN"
+                document.getElementById("contenido").innerHTML=this.responseText;
+                document.getElementById("carri").innerHTML="";
+
+            }catch(e){
+                document.getElementById("contenido").innerHTML = `<p>Error</p>`;
+            }
+
+        }else{
+            document.getElementById("contenido").innerHTML = `<p>Error</p>`;
+        }
+    };
+    xhttp.open("GET", "navAdmin_json.php", true);
     xhttp.send();
     return false;
 }

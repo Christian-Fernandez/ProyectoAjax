@@ -51,7 +51,6 @@ if(!isset($_GET["producto"])) {
 
 }
 
-
 ?>
 
 

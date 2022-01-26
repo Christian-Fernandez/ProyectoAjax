@@ -4,15 +4,16 @@
     require 'sesiones_json.php';
     if(!comprobar_sesion()) return;
     
-    $resul = insertar_pedido($_SESSION['carrito'], $_SESSION['usuario']);
+    $resul = insertar_pedido($_SESSION['carrito'], $_SESSION['usuarios']);
     if($resul === FALSE){
         echo "FALSE";			
     }else{
+        ticket();
         echo "TRUE";
         $productos = cargar_productos(array_keys($_SESSION["carrito"]));
         foreach ($_SESSION["carrito"] as $key => $value) {
             restar_stock($key, $value);
         }
         $_SESSION['carrito'] = [];
-    }		
+    }
 	
