@@ -140,6 +140,7 @@ function cargarCarrito(){
                     //añadimos el vínculo de "procesar pedido"
                     var procesar = document.createElement("a");
                     procesar.href ="#";
+                    procesar.id ="procesar_pedido";
                     procesar.innerHTML= "Realizar pedido";
                     procesar.onclick = function() {
                         if (window.confirm("¿Deseas confirmar el pedido?")) {
@@ -232,7 +233,8 @@ function procesarPedido(){
             var titulo = document.getElementById("titulo");
             titulo.innerHTML ="Estado del pedido";
             if(this.responseText=="TRUE"){
-                contenido.innerHTML = "Pedido realizado";
+                contenido.innerHTML = "<p>Pedido realizado</p>";
+
                 cargarMiniCarrito();
             }else{
                 contenido.innerHTML = "Error al procesar el pedido";

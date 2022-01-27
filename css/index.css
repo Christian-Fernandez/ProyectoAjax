@@ -439,4 +439,22 @@ div p{
     font-size: 11px;
 }
 
+#procesar_pedido{
+    display: flex;
+    color: black;
+    border: 1px black solid;
+    border-radius: 5px;
+    text-decoration: none;
+    padding: 10px 20px;
+    line-height: normal;
+    font-size: 20px;
+    font-weight: bold;
+    width: 200px;
+    margin: 0 auto;
+    flex-direction: row;
 
+}
+
+#procesar_pedido:hover {
+    background: #5691f1;
+}

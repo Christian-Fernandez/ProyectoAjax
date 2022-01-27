@@ -1,8 +1,8 @@
 <?php
 
 define("CADENA_CONEXION", 'mysql:dbname=pedidos;host=127.0.0.1');
-define("USUARIO_CONEXION", 'root');
-define("CLAVE_CONEXION", '');
+define("USUARIO_CONEXION", 'ciclost');
+define("CLAVE_CONEXION", 'toor');
 
 function comprobar_usuario($nombre, $clave){
     try{
